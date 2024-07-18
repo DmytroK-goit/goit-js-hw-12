@@ -1,32 +1,71 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import axios from 'axios';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 import { performSearch, showLoader, hideLoader } from './js/pixabay-api.js';
 import { renderImages } from './js/render-functions';
 
+const fetchPostsBtn = document.querySelector('.btn');
 const searchForm = document.querySelector('#search-form');
+let page = 1;
+let searchQuery = '';
+
 searchForm.addEventListener('submit', async event => {
   event.preventDefault();
   const formData = new FormData(event.target);
-  const searchQuery = formData.get('query');
+  searchQuery = formData.get('query');
 
   if (searchQuery && searchQuery.trim()) {
     try {
       showLoader();
-      const posts = await performSearch(searchQuery.trim());
-      renderImages(posts);
-      //   page += 1;
-      //   if (page > 1) {
-      //     fetchPostsBtn.textContent = 'Fetch more posts';
-      //   }
+      const images = await performSearch(searchQuery.trim(), page);
+      console.log(images.data);
+      if (images.totalHits > 0) {
+        iziToast.show({
+          position: 'topRight',
+          backgroundColor: 'green',
+          message: `Found ${images.totalHits} results.`,
+        });
+      }
+      renderImages(images);
+      page += 1;
+      if (page > 1) {
+        fetchPostsBtn.textContent = 'Fetch more posts';
+        fetchPostsBtn.style.display = 'block';
+      }
     } catch (error) {
       console.log(error);
+      iziToast.error({
+        title: 'Error',
+        message: 'Something went wrong. Please try again later.',
+      });
     } finally {
       hideLoader();
     }
   }
 });
+
+fetchPostsBtn.addEventListener('click', async () => {
+  if (searchQuery && searchQuery.trim()) {
+    try {
+      showLoader();
+      const images = await performSearch(searchQuery.trim(), page);
+      renderImages(images);
+      page += 1;
+    } catch (error) {
+      console.log(error);
+      iziToast.error({
+        title: 'Error',
+        message: 'Something went wrong. Please try again later.',
+      });
+    } finally {
+      hideLoader();
+    }
+  }
+});
+
 //     showLoader();
 //     performSearch(searchQuery.trim())
 //       .then(response => {

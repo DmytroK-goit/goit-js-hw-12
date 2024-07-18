@@ -29,12 +29,12 @@ export function renderImages(images) {
     })
     .join('');
 
-  gallery.innerHTML = markup;
+  gallery.insertAdjacentHTML('beforeend', markup);
+  const lightbox = new SimpleLightbox('.image-card a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+    navText: ['&larr;', '&rarr;'],
+    closeText: '&times;',
+  });
   lightbox.refresh();
 }
-const lightbox = new SimpleLightbox('.image-card a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-  navText: ['&larr;', '&rarr;'],
-  closeText: '&times;',
-});
