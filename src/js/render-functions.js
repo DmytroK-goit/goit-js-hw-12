@@ -30,6 +30,7 @@ export function renderImages(images) {
     .join('');
 
   gallery.insertAdjacentHTML('beforeend', markup);
+
   const lightbox = new SimpleLightbox('.image-card a', {
     captionsData: 'alt',
     captionDelay: 250,

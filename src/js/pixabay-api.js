@@ -11,14 +11,16 @@ export function hideLoader() {
 
 export async function performSearch(searchQuery) {
   let page = 1;
+  const limit = 20;
   const perPage = 20;
   const API_KEY = '44758497-ea11318ae0823ef09cb8fbdb5';
   const searchParams = new URLSearchParams({
     key: API_KEY,
     q: searchQuery,
     image_type: 'photo',
-    _per_page: perPage,
-    _page: page,
+    // _limit: limit,
+    // per_page: perPage,
+    // page: page,
   });
 
   const response = await axios.get(`https://pixabay.com/api/?${searchParams}`);
