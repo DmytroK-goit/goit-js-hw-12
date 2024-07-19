@@ -22,6 +22,7 @@ searchForm.addEventListener('submit', async event => {
     try {
       showLoader();
       const images = await performSearch(searchQuery.trim(), page);
+      console.log(images.hits);
       if (images.totalHits > 0) {
         iziToast.show({
           position: 'topRight',
