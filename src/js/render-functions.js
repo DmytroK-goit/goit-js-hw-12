@@ -1,18 +1,9 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
+const gallery = document.querySelector('#gallery');
+
 export function renderImages(images) {
-  const gallery = document.querySelector('#gallery');
-  if (!gallery) {
-    console.error('Елемент #gallery не знайдений в DOM.');
-    return;
-  }
-
-  if (images.length === 0) {
-    gallery.innerHTML = '<p>Нічого не знайдено.</p>';
-    return;
-  }
-
   const markup = images
     .map(image => {
       return `
@@ -30,12 +21,11 @@ export function renderImages(images) {
     .join('');
 
   gallery.insertAdjacentHTML('beforeend', markup);
-
-  const lightbox = new SimpleLightbox('.image-card a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-    navText: ['&larr;', '&rarr;'],
-    closeText: '&times;',
-  });
   lightbox.refresh();
 }
+const lightbox = new SimpleLightbox('.image-card a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+  navText: ['&larr;', '&rarr;'],
+  closeText: '&times;',
+});

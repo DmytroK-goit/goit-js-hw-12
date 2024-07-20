@@ -20,8 +20,8 @@ export async function performSearch(searchQuery, page) {
     page: page,
   });
 
-  const response = await axios.get(`https://pixabay.com/api/?${searchParams}`);
+  const {data} = await axios.get(`https://pixabay.com/api/?${searchParams}`);
   console.log('результат ${response.data}');
-
-  return response.data.hits;
+console.log(data);
+  return data;
 }

@@ -22,7 +22,7 @@ searchForm.addEventListener('submit', async event => {
     try {
       showLoader();
       const images = await performSearch(searchQuery.trim(), page);
-      console.log(images);
+      console.log(images.hits);
       if (images.totalHits > 0) {
         iziToast.show({
           position: 'topRight',
@@ -30,7 +30,7 @@ searchForm.addEventListener('submit', async event => {
           message: `Found ${images.totalHits} results.`,
         });
       }
-      renderImages(images);
+      renderImages(images.hits);
       page += 1;
       if (page > 1) {
         fetchPostsBtn.textContent = 'Fetch more posts';
