@@ -21,7 +21,6 @@ export async function performSearch(searchQuery, page) {
   });
 
   const {data} = await axios.get(`https://pixabay.com/api/?${searchParams}`);
-  console.log('результат ${response.data}');
-console.log(data);
+ console.log(data);
   return data;
 }
