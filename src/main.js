@@ -17,6 +17,12 @@ searchForm.addEventListener('submit', async event => {
   page = 1;
   const formData = new FormData(event.target);
   searchQuery = formData.get('query');
+  if (!searchQuery.trim()) {
+  return iziToast.show({
+  position: 'topRight',
+  backgroundColor: 'orange',
+  message: 'Будь ласка, введіть пошуковий запит.',
+})}
 
   if (searchQuery && searchQuery.trim()) {
     try {
@@ -53,7 +59,7 @@ fetchPostsBtn.addEventListener('click', async () => {
     try {
       showLoader();
       const images = await performSearch(searchQuery.trim(), page);
-      renderImages(images);
+      renderImages(images.hits);
       page += 1;
     } catch (error) {
       console.log(error);
