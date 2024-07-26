@@ -1,10 +1,7 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-import axios from 'axios';
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
 
-import { performSearch, showLoader, hideLoader } from './js/pixabay-api.js';
+import { performSearch, showLoader, hideLoader, clearGallery } from './js/pixabay-api.js';
 import { renderImages } from './js/render-functions';
 
 const fetchPostsBtn = document.querySelector('.btn');
@@ -14,6 +11,7 @@ let searchQuery = '';
 
 searchForm.addEventListener('submit', async event => {
   event.preventDefault();
+  clearGallery();
   page = 1;
   const formData = new FormData(event.target);
   searchQuery = formData.get('query');
@@ -37,13 +35,14 @@ searchForm.addEventListener('submit', async event => {
         });
       }
       if (images.totalHits === 0) {
+        clearGallery();
         console.log(images.totalHits);
          iziToast.show({
           position: 'topRight',
           backgroundColor: 'yellow',
           message: `Found ${images.totalHits} results.`,
          });
-        return defGallery;
+    
       }
       renderImages(images.hits);
       page += 1;
@@ -81,52 +80,3 @@ fetchPostsBtn.addEventListener('click', async () => {
     }
   }
 });
-
-//     showLoader();
-//     performSearch(searchQuery.trim())
-//       .then(response => {
-//         if (!response.ok) {
-//           throw new Error('Не вдалося виконати запит.');
-//         }
-//         return response.json();
-//       })
-//       .then(data => {
-//         hideLoader();
-//         if (data.totalHits > 0) {
-//           iziToast.show({
-//             position: 'topRight',
-//             backgroundColor: 'green',
-//             message: `Found ${data.totalHits} results.`,
-//           });
-//           return data.hits;
-//         } else {
-//           iziToast.show({
-//             position: 'topRight',
-//             backgroundColor: 'red',
-//             message:
-//               'Sorry, there are no images matching your search query. Please try again!',
-//           });
-//           return [];
-//         }
-//       })
-//       .then(results => {
-//         console.log(results);
-//         renderImages(results);
-//       })
-//       .catch(error => {
-//         hideLoader(),
-//           iziToast.show({
-//             position: 'topRight',
-//             backgroundColor: 'red',
-//             message: 'Error during the request. Please try again later.',
-//           });
-//         throw error;
-//       });
-//   } else {
-//     iziToast.show({
-//       position: 'center',
-//       backgroundColor: 'orange',
-//       message: 'Будь ласка, введіть пошуковий запит.',
-//     });
-//   }
-// });

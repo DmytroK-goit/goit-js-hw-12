@@ -24,3 +24,6 @@ export async function performSearch(searchQuery, page) {
  console.log(data);
   return data;
 }
+export function clearGallery() {
+  gallery.innerHTML = '';
+}
