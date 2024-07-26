@@ -36,6 +36,15 @@ searchForm.addEventListener('submit', async event => {
           message: `Found ${images.totalHits} results.`,
         });
       }
+      if (images.totalHits === 0) {
+        console.log(images.totalHits);
+         iziToast.show({
+          position: 'topRight',
+          backgroundColor: 'yellow',
+          message: `Found ${images.totalHits} results.`,
+         });
+        return defGallery;
+      }
       renderImages(images.hits);
       page += 1;
       if (page > 1) {
