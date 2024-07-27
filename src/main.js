@@ -52,6 +52,7 @@ searchForm.addEventListener('submit', async event => {
           backgroundColor: 'yellow',
           message: `Found ${images.totalHits} results.`,
         });
+        searchInput.value = '';
         return;
       }
       renderImages(images.hits);
