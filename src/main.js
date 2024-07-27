@@ -11,6 +11,7 @@ import { renderImages } from './js/render-functions';
 
 const fetchPostsBtn = document.querySelector('.btn');
 const searchForm = document.querySelector('#search-form');
+const searchInput = document.querySelector('#searchInput');
 let page = 1;
 let searchQuery = '';
 let totalResults = 0;
@@ -32,10 +33,10 @@ searchForm.addEventListener('submit', async event => {
   if (searchQuery && searchQuery.trim()) {
     try {
       showLoader();
+
       const images = await performSearch(searchQuery.trim(), page);
       console.log(images.hits);
       if (images.totalHits > 0) {
-        searchForm = '';
         iziToast.show({
           position: 'topRight',
           backgroundColor: 'green',
@@ -55,6 +56,7 @@ searchForm.addEventListener('submit', async event => {
       }
       renderImages(images.hits);
       totalResults += images.hits.length;
+      searchInput.value = '';
       page += 1;
       if (page > 1) {
         fetchPostsBtn.textContent = 'Fetch more posts';
