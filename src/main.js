@@ -1,13 +1,19 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-import { performSearch, showLoader, hideLoader, clearGallery } from './js/pixabay-api.js';
+import {
+  performSearch,
+  showLoader,
+  hideLoader,
+  clearGallery,
+} from './js/pixabay-api.js';
 import { renderImages } from './js/render-functions';
 
 const fetchPostsBtn = document.querySelector('.btn');
 const searchForm = document.querySelector('#search-form');
 let page = 1;
 let searchQuery = '';
+let totalResults = 0;
 
 searchForm.addEventListener('submit', async event => {
   event.preventDefault();
@@ -16,11 +22,12 @@ searchForm.addEventListener('submit', async event => {
   const formData = new FormData(event.target);
   searchQuery = formData.get('query');
   if (!searchQuery.trim()) {
-  return iziToast.show({
-  position: 'topRight',
-  backgroundColor: 'orange',
-  message: 'Будь ласка, введіть пошуковий запит.',
-})}
+    return iziToast.show({
+      position: 'topRight',
+      backgroundColor: 'orange',
+      message: 'Будь ласка, введіть пошуковий запит.',
+    });
+  }
 
   if (searchQuery && searchQuery.trim()) {
     try {
@@ -28,6 +35,7 @@ searchForm.addEventListener('submit', async event => {
       const images = await performSearch(searchQuery.trim(), page);
       console.log(images.hits);
       if (images.totalHits > 0) {
+        searchForm = '';
         iziToast.show({
           position: 'topRight',
           backgroundColor: 'green',
@@ -36,15 +44,17 @@ searchForm.addEventListener('submit', async event => {
       }
       if (images.totalHits === 0) {
         clearGallery();
+        fetchPostsBtn.style.display = 'none';
         console.log(images.totalHits);
-         iziToast.show({
+        iziToast.show({
           position: 'topRight',
           backgroundColor: 'yellow',
           message: `Found ${images.totalHits} results.`,
-         });
-    
+        });
+        return;
       }
       renderImages(images.hits);
+      totalResults += images.hits.length;
       page += 1;
       if (page > 1) {
         fetchPostsBtn.textContent = 'Fetch more posts';
@@ -68,7 +78,9 @@ fetchPostsBtn.addEventListener('click', async () => {
       showLoader();
       const images = await performSearch(searchQuery.trim(), page);
       renderImages(images.hits);
+      totalResults += images.hits.length;
       page += 1;
+      checkMaxResults(totalResults, images.totalHits);
     } catch (error) {
       console.log(error);
       iziToast.error({
@@ -80,3 +92,14 @@ fetchPostsBtn.addEventListener('click', async () => {
     }
   }
 });
+
+function checkMaxResults(totalResults, totalHits) {
+  if (totalResults >= totalHits) {
+    fetchPostsBtn.style.display = 'none';
+    iziToast.show({
+      position: 'topRight',
+      backgroundColor: 'yellow',
+      message: "We're sorry, but you've reached the end of search results.'",
+    });
+  }
+}
